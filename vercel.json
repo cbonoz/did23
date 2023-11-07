@@ -1,0 +1,12 @@
+{
+    "functions": {
+      "app/api/provision/route.js": {
+        "memory": 1024,
+        "maxDuration": 10
+      },
+      "app/api/verify/route.js": {
+        "memory": 1024,
+        "maxDuration": 10
+      }
+    }
+  }
