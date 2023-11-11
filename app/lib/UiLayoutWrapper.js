@@ -10,6 +10,7 @@ import { Content, Footer, Header } from "antd/es/layout/layout";
 import ConnectButton from "./ConnectButton";
 import Image from "next/image";
 import { useAccount } from "wagmi";
+import DidButton from "./DidButton";
 
 function UiLayoutWrapper({ children }) {
 
@@ -71,7 +72,8 @@ function UiLayoutWrapper({ children }) {
                             mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
 
                         <span style={{ float: 'right', right: 20, position: 'absolute' }}>
-                            <ConnectButton />
+                            <DidButton>Hello</DidButton>
+                            {/* <ConnectButton /> */}
                         </span>
 
 
