@@ -62,11 +62,6 @@ export default function Admin() {
     }
 
     const signer = useEthersSigner({ chainId: ACTIVE_CHAIN.id })
-
-    if (!address) {
-        return
-    }
-
     return <div className="admin-page">
         <h1>Admin</h1>
         <br></br>
@@ -74,34 +69,19 @@ export default function Admin() {
 
         <Divider />
 
-        <Card title='1. Deploy master contract'>
-            {BLOCKREACH_ADDRESS && <p>
-                Contract detected: {BLOCKREACH_ADDRESS}<br/>
-                View contract <a href={getExplorerUrl(BLOCKREACH_ADDRESS)} target="_blank">here</a>.
-
-            </p>
-            }
-
-            {!BLOCKREACH_ADDRESS && <p>
-                This will deploy the master contract for {APP_NAME}.<br />
-                Follow guide <a href={GITHUB_URL + "/blob/master/contracts/README.md"} target="_blank">here</a> to deploy master contract.
-                Update contract address in `.env` and rebuild project.
-            </p>}
-            {/* <Button type='primary' disabled={loading} loading={loading} onClick={deploy}>Deploy</Button>
-
-            {result.contract && <div>
-                <Divider />
-                <p>Result</p>
-                <pre>{JSON.stringify(result.contract, null, 2)}</pre>
-            </div>} */}
-        </Card>
-
-        <br />
-
         <Card title='2. Generate DID (issuer and holder) keys' >
             <p>
-                This will generate a new DID associated with the {ACTIVE_CHAIN.name} network.
+                This will generate a new DID associated with the handle below.
             </p>
+
+            <Input
+                value={handle}
+                size='large'
+                className='standard-padding standard-margin'
+                onChange={(e) => setHandle(e.target.value)}
+                placeholder="Enter entity or individual lens handle"
+                style={{ width: 400 }} />
+
             {/* <Input
                 value={handle}
                 size='large'
@@ -123,7 +103,7 @@ export default function Admin() {
 
         <br />
 
-        <Card title='3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner'>
+        {false && <Card title='3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner'>
             <p>
                 This will generate a verified credential for the given handle using the {APP_NAME} issuer key. This should be shared with the business/entity handle owner.
             </p>
@@ -161,6 +141,6 @@ export default function Admin() {
                 <p>Result</p>
                 {JSON.stringify(result.vc, null, 2)}
             </div>}
-        </Card>
+        </Card>}
     </div>
 }

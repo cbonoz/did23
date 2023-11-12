@@ -27,3 +27,12 @@ export const postVerifyVP = async (presentation, handle) => {
     return res.data
 }
 
+export const getCommentsForHandle = async (handle) => {
+    const res = await axiosInstance.get(`/api/comments/${handle}`)
+    return res.data
+}
+
+export const createCommentForHandle = async (handle, comment) => {
+    const res = await axiosInstance.post(`/api/comments/${handle}`, {comment})
+    return res.data
+}

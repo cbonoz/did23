@@ -25,6 +25,6 @@ export const getProfileByHandle = async (handle) => {
 export const searchProfiles = (query, limit) => {
     return lensClient.search.profiles({
         query,
-        limit: limit || 10
+        limit: limit || 25
     })
 }

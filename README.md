@@ -7,8 +7,7 @@
 Blockreach
 ---
 
-A modern Yellowpages for verified web3 individual and business profiles.
-
+Verified company reviews and communication using verified Web5 DID secure channels.
 
 
 ### Inspiration
@@ -18,6 +17,12 @@ Online partners and potential clients are constantly looking for ways to get in 
 Accounts have an additional layer of security through Blockreach-issued DIDs and VCs for each verified partner on the app.
 
 Blockreach serves as a bridge for secure B2B communication, ensuring that both parties can be confident they are contacting an authorized source. This assurance is achieved through Blockreach-issued verifiable credentials (VCs) and decentralized identifiers. Going after the Finance & Identity Intersection category.
+
+## How it works
+
+1. Pages on BlockReach are automatically generated from user's existing web profiles using <a href="https://www.lens.xyz/" target="_blank">Lens</a>.
+2. Users can claim profiles using validated DIDs.
+3. Once verified, company pages can be shared and posted against by public users.
 
 ## Running the project (from scratch)
 
