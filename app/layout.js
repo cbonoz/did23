@@ -1,5 +1,5 @@
 import UiLayoutWrapper from './lib/UiLayoutWrapper';
-import WagmiWrapper from './lib/WagmiWrapper';
+import { DidProvider } from './context/DidProvider';
 
 import './globals.css';
 
@@ -17,11 +17,11 @@ export default function RootLayout({ children }) {
       <meta name="description" content="Privy Auth Starter" />
     </head>
     <body>
-      <WagmiWrapper>
+      <DidProvider>
         <UiLayoutWrapper>
           {children}
         </UiLayoutWrapper>
-      </WagmiWrapper>
+</DidProvider>
     </body>
   </html>
   )

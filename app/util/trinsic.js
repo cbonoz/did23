@@ -1,7 +1,7 @@
 import { SignatureType, TrinsicService } from "@trinsic/trinsic";
  
  
-const TRINSIC_TOKEN = process.env.TRINSIC_TOKEN
+const TRINSIC_TOKEN = process.env.TRINSIC_AUTH_TOKEN
  
 const trinsic = new TrinsicService({
     authToken: TRINSIC_TOKEN,
@@ -18,6 +18,7 @@ export const sendCredential = async (email, documentJson) => {
  
 // https://docs.trinsic.id/examples/issue-direct-send/#issue-credential-from-template
 export const issueCredential = async (values) => {
+    console.log('issue', TRINSIC_TOKEN, values)
  
     const issueResponse = await trinsic.credential().issueFromTemplate({
         // required

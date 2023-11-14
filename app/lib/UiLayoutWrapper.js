@@ -7,16 +7,13 @@ import { ACTIVE_CHAIN, APP_NAME, PRIMARY_COLOR } from "../constants";
 import StyledComponentsRegistry from "./AntdRegistry";
 import { Button, ConfigProvider, Layout, Menu } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import ConnectButton from "./ConnectButton";
 import Image from "next/image";
-import { useAccount } from "wagmi";
 import DidButton from "./DidButton";
 
 function UiLayoutWrapper({ children }) {
 
     const pathname = usePathname()
     const isListingPage = pathname.startsWith('/profile')
-    const { address } = useAccount();
     const menuItems = []
     menuItems.push({
         key: '/search',
@@ -31,7 +28,7 @@ function UiLayoutWrapper({ children }) {
     })
 
 
-    const isAdmin = isAdminAddress(address)
+    const isAdmin = isAdminAddress()
 
     if (isAdmin) {
         menuItems.push({
@@ -73,14 +70,10 @@ function UiLayoutWrapper({ children }) {
 
                         <span style={{ float: 'right', right: 20, position: 'absolute' }}>
                             <DidButton>Hello</DidButton>
-                            {/* <ConnectButton /> */}
                         </span>
 
 
                     </Header>
-                    <span className='float-right bold active-network' >
-                        Active network: {ACTIVE_CHAIN.name}&nbsp;
-                    </span>
                     <Content className='container'>
                         {/* Pass children to the content area */}
                         <div className='container'>

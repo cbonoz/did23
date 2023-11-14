@@ -3,11 +3,11 @@
 import { Button, Card, Divider, Input } from "antd";
 import { useEffect, useState } from "react";
 import { APP_NAME, OFFER_TABLE, LISTING_TABLE, ACTIVE_CHAIN, BLOCKREACH_ADDRESS, GITHUB_URL } from "../constants";
-import { useEthersSigner } from "../hooks/useEthersSigner";
 import { postGenerateDid, postGenerateVC } from "../util/api";
 import { getExplorerUrl, isAdminAddress } from "../util";
 import { useRouter } from "next/navigation";
-import { useAccount } from "wagmi";
+import { createMetadataForHandle, getMetadataForHandle } from "../util/tbd";
+import { useDidContext } from "../context/DidProvider";
 
 export default function Admin() {
     const [loading, setLoading] = useState(false)
@@ -17,24 +17,31 @@ export default function Admin() {
     const router = useRouter()
     const [result, setResult] = useState({})
 
-    const { address } = useAccount();
+    const {web5} = useDidContext()
 
-    useEffect(() => {
-        // push to home if not admin
-        if (!isAdminAddress(address)) {
-            router.push('/')
-        }
-    }, [address])
+    // useEffect(() => {
+    //     // push to home if not admin
+    //     if (!isAdminAddress(address)) {
+    //         router.push('/')
+    //     }
+    // }, [address])
 
     const updateResult = (key, value) => {
         setResult({ ...result, [key]: value })
     }
 
-    async function did() {
+    async function createDid() {
+        if (!handle) {
+            throw new Error('handle is required')
+        }
+        
         setLoading(true)
         try {
-            const res = await postGenerateDid(handle)
+            let res = await postGenerateDid(handle);
+            res = await createMetadataForHandle(web5, handle)
             console.log('generated', res)
+            const results = await getMetadataForHandle(web5, handle);
+            res['metadata'] = results;
             updateResult('did', res)
         } catch (e) {
             console.error('generating did', e)
@@ -61,7 +68,6 @@ export default function Admin() {
 
     }
 
-    const signer = useEthersSigner({ chainId: ACTIVE_CHAIN.id })
     return <div className="admin-page">
         <h1>Admin</h1>
         <br></br>
@@ -91,7 +97,7 @@ export default function Admin() {
                 style={{ width: 400 }} /> */}
 
             <br />
-            <Button type='primary' disabled={loading} loading={loading} onClick={did}>Generate DID </Button>
+            <Button type='primary' disabled={loading} loading={loading} onClick={createDid}>Generate DID </Button>
 
 
             {result.did && <div>

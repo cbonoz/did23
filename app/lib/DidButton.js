@@ -1,30 +1,20 @@
 'use client'
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal } from "antd";
-import { Web5 } from "@web5/api";
+import { abbreviate } from "../util";
+import { useDidContext } from "../context/DidProvider";
 
 
 const DidButton = ({ children, useExisting }) => {
-    const [loading, setLoading] = useState(false)
-    const [connectedDid, setConnectedDid] = useState(localStorage.getItem('connectedDid'));
+    const [loading, setLoading] = useState();
+    const { connect, logout, did } = useDidContext()
 
-    const connect = async () => {
+    const login = async (newDid) => {
         setLoading(true)
-        let res
         try {
-            if (useExisting && connectedDid) {
-                res = await Web5.connect({
-                    agent: null,
-                    connectedDid
-                });
-            } else {
-                res = await Web5.connect();
-            }
+            await connect(newDid)
 
-            let { web5, did } = res;
-            localStorage.setItem('connectedDid', did)
-            console.log('web5', null, did);
         } catch (error) {
             console.error('error', error)
         } finally {
@@ -32,20 +22,23 @@ const DidButton = ({ children, useExisting }) => {
         }
     }
 
-    const logout = () => {
-        localStorage.removeItem('connectedDid')
-        setConnectedDid(null)
+    if (did) {
+        return (
+            <span>
+                {abbreviate(did, 12)}&nbsp;
+                <Button type='primary' onClick={logout} loading={loading} disabled={loading}>
+                    Logout
+                </Button>
+            </span>
+        )
     }
 
-    if (connectedDid) {
-        return
-    }
+    return (<span>
+        <Button type='primary' onClick={() => login()} loading={loading} disabled={loading}>
+            Signin
+        </Button>&nbsp;
+    </span>
 
-    return (
-
-        <Button type='primary' {...props} onClick={connect} loading={loading} disabled={loading}>
-            {children}
-        </Button>
     );
 }
 export default DidButton;

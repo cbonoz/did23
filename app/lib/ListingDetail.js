@@ -27,10 +27,7 @@ import { postVerifyVP } from '../util/api';
 import { Comment } from '@ant-design/compatible';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { useAccount } from 'wagmi';
 import { claimProfile, getProfile, sendInquiry } from '../util/profileContract';
-import { useEthersSigner } from '../hooks/useEthersSigner';
-import ConnectButton from './ConnectButton';
 import Checkbox from 'antd/es/checkbox/Checkbox';
 
 const ListingDetail = ({ listingId, provider }) => {
@@ -46,8 +43,6 @@ const ListingDetail = ({ listingId, provider }) => {
     const [hideMessage, setHideMessage] = useState(false)
     const [result, setResult] = useState()
     // get account from web3
-    const { address } = useAccount()
-    const signer = useEthersSigner({ chainId: ACTIVE_CHAIN.id })
 
     const verifyPresentation = async () => {
         if (!presentation) {
@@ -63,7 +58,7 @@ const ListingDetail = ({ listingId, provider }) => {
                 alert('Account could not be verified: ' + err);
                 return;
             }
-            await claimProfile(signer, listingId)
+            await claimProfile(null, listingId)
             setResult({
                 verified: true,
                 message: "It may take a few moments for the verification status on the page to update"
@@ -227,14 +222,6 @@ const ListingDetail = ({ listingId, provider }) => {
 
                 <Row gutter={16}>
                     <Col span={24}>
-                        {!address && <p className=''>
-                            Connect wallet to access profile page.
-                            <div className='standard-margin'>
-                                <ConnectButton buttonType='dashed' />
-                            </div>
-
-
-                        </p>}
                         {address && <div>
                             <p>
                                 {(isVerified && address) ? <span className="verified-badge success-text">
