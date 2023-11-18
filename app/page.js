@@ -5,13 +5,13 @@ import { Button, Spin, Row, Col, Input, Divider } from 'antd';
 import { APP_DESC, APP_NAME } from './constants';
 import { CheckCircleTwoTone } from '@ant-design/icons';
 import Image from 'next/image';
-import heroImage from './assets/city.gif'
+// import heroImage from './assets/city.gif'
 import { useRouter } from 'next/navigation';
 
 // TODO: change
 const CHECKLIST_ITEMS = [
-  "Set up a searchable business or profile landing page using your lens handle",
-  `Send and request verified peer to peer requests and invoices`,
+  "Claim a searchable business or profile landing page using your lens handle",
+  "Request verified reviews stored on decentralized nodes",
   "No vendor accounts or agreements required",
 ];
 
@@ -26,10 +26,14 @@ const Home = () => {
   const [error, setError] = useState()
 
   return <div className='home-section'>
-    <Row className='home-section' gutter={16}>
+    <Row gutter={{
+      xs: 8,
+      sm: 16,
+      md: 24,
+      lg: 32,
+    }}>
       <Col span={12}>
         <div className='prompt-section'>
-          {/* <img src={logo} className='home-logo'/><br/> */}
           {APP_DESC}
         </div>
         {CHECKLIST_ITEMS.map((item, i) => {
@@ -44,7 +48,7 @@ const Home = () => {
         <div>
         </div>
         <div>
-<br/>
+          <br />
           <Input
             value={handle}
             size='large'
@@ -52,13 +56,13 @@ const Home = () => {
             onChange={(e) => setHandle(e.target.value)}
             placeholder="Enter lens handle"
             style={{ width: 200 }}
-          /><br/>
+          /><br />
 
           <Button disabled={!handle} className='standard-btn' type="primary" onClick={() => router.push('/profile/' + handle)}>
             Go to handle
           </Button>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <p>--- or ---</p>
 
           <Button className='standard-btn' size="large" type="dashed" onClick={() => router.push('/search')}>
@@ -67,8 +71,15 @@ const Home = () => {
         </div>
       </Col>
       <Col span={12}>
-        <br/>
-        <Image width={400} height={350} className='hero-image' src={heroImage} alt={APP_NAME}/>
+        <br />
+        <Image
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: '100%', height: 'auto' }}
+          className='hero-image' src={'/logo_3_2.png'}
+          alt={APP_NAME}
+        />
       </Col>
     </Row>
 

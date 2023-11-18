@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseUrl = process.env.NODE_ENV === 'production' ? 'https://blockreach.vercel.app' : 'http://localhost:3000';
+const baseUrl = process.env.NODE_ENV === 'production' ? 'https://verifiedentity.vercel.app' : 'http://localhost:3000';
 
 const axiosInstance = axios.create({
     baseURL: baseUrl,
@@ -9,8 +9,6 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json',
     },
 });
-
-//https://github.com/jpmorganchase/onyx-ssi-sdk
 
 export const postGenerateDid = async (handle, type) => {
     const res = await axiosInstance.post(`/api/provision/did`, {handle, type})

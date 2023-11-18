@@ -2,15 +2,18 @@
 
 import { usePathname } from "next/navigation"
 import Link from "next/link";
-import { abbreviate, isAdminAddress } from "../util";
-import { ACTIVE_CHAIN, APP_NAME, PRIMARY_COLOR } from "../constants";
+import { APP_NAME, PRIMARY_COLOR } from "../constants";
 import StyledComponentsRegistry from "./AntdRegistry";
-import { Button, ConfigProvider, Layout, Menu } from "antd";
+import { ConfigProvider, Layout, Menu } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
 import Image from "next/image";
 import DidButton from "./DidButton";
+import { useDidContext } from "../context/DidProvider";
+import { isAdminDID } from "../util";
 
 function UiLayoutWrapper({ children }) {
+
+    const {did} = useDidContext()
 
     const pathname = usePathname()
     const isListingPage = pathname.startsWith('/profile')
@@ -27,8 +30,7 @@ function UiLayoutWrapper({ children }) {
         href: '/about',
     })
 
-
-    const isAdmin = isAdminAddress()
+    const isAdmin = isAdminDID(did)
 
     if (isAdmin) {
         menuItems.push({
@@ -56,13 +58,13 @@ function UiLayoutWrapper({ children }) {
             <StyledComponentsRegistry>
                 <Layout>
                     <Header style={{ background: '#fff', display: 'flex' }}>
-                        <Image src="/logo.png" alt="Blockreach Logo"
+                        <Image src="/logo.png" alt="VerifiedEntity Logo"
                             className='header-logo pointer'
                             height={48}
                             onClick={() => {
                                 window.location.href = '/'
                             }}
-                            width={160}
+                            width={200}
                         />
 
                         <Menu style={{ minWidth: '800px' }}

@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
       {/* <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png" /> */}
       {/* <link rel="manifest" href="/favicons/manifest.json" /> */}
 
-      <title>Blockreach | Identity-verified Web3 profile index</title>
+      <title>VerifiedEntity | Identity-verified Web3 profile index</title>
       <meta name="description" content="Privy Auth Starter" />
     </head>
     <body>

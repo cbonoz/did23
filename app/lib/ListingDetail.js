@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, use } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import {
     Button,
     Row,
@@ -11,24 +11,26 @@ import {
     Spin,
     Divider,
     Modal,
-    Input,
     Breadcrumb,
     Result,
     Statistic,
     Tooltip,
     Empty,
+    Tabs,
+    Rate,
 } from 'antd';
 import Image from 'next/image'
-import { ACTIVE_CHAIN, APP_NAME, EXAMPLE_OFFERS, STAT_KEYS } from '../constants';
+import { APP_NAME } from '../constants';
 import { getProfileByHandle, getProfileById } from '../util/lens'
 import VerifiedCheck from '../lib/VerifiedCheck';
-import { formatDate, getExplorerUrl, isEmpty } from '../util';
-import { postVerifyVP } from '../util/api';
+import { formatDate, isEmpty } from '../util';
+import { getCommentsForHandle, postVerifyVP } from '../util/api';
 import { Comment } from '@ant-design/compatible';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { claimProfile, getProfile, sendInquiry } from '../util/profileContract';
 import Checkbox from 'antd/es/checkbox/Checkbox';
+
+const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ListingDetail = ({ listingId, provider }) => {
     const [loading, setLoading] = useState(true)
@@ -36,10 +38,12 @@ const ListingDetail = ({ listingId, provider }) => {
     const [inquireLoading, setInquireLoading] = useState(false)
     const [showClaimModal, setShowClaimModal] = useState(false)
     const [presentation, setPresentation] = useState()
+    const [reviews, setReviews] = useState()
     const [error, setError] = useState()
     const [profile, setProfile] = useState()
     const [amount, setAmount] = useState()
     const [message, setMessage] = useState()
+    const [rating, setRating] = useState(3);
     const [hideMessage, setHideMessage] = useState(false)
     const [result, setResult] = useState()
     // get account from web3
@@ -48,7 +52,6 @@ const ListingDetail = ({ listingId, provider }) => {
         if (!presentation) {
             return
         }
-        setLoading(true)
         try {
             const res = await postVerifyVP(presentation, profile?.handle || listingId)
             console.log('verified', res)
@@ -68,9 +71,25 @@ const ListingDetail = ({ listingId, provider }) => {
         } catch (e) {
             console.error('error verifying', e)
             setError(e.message)
-        } finally {
-            setLoading(false)
         }
+    }
+
+    async function getReviews(id) {
+        setError()
+        try {
+            const res = await getCommentsForHandle(id)
+            console.log('got reviews', res)
+            setReviews(res);
+        } catch (e) {
+            console.error('error getting reviews', e)
+            // setError(e.message)
+        }
+    }
+
+    async function postReview(id, message, rating) {
+
+
+
     }
 
     async function fetchListing(id) {
@@ -85,10 +104,10 @@ const ListingDetail = ({ listingId, provider }) => {
                 }
             }
             try {
-                const metadata = await getProfile(signer, id)
-                console.log('got metadata', metadata)
-                const verified = !!metadata[2];
-                res.verified = verified;
+                // const metadata = await getProfile(signer, id)
+                // console.log('got metadata', metadata)
+                // const verified = !!metadata[2];
+                res.verified = true;
             } catch (e) {
                 console.error('error getting metadata', e)
                 res.verified = false
@@ -120,9 +139,16 @@ const ListingDetail = ({ listingId, provider }) => {
         }
     }
 
+    async function init() {
+        setLoading(true)
+        await fetchListing(listingId)
+        await getReviews(listingId)
+        setLoading(false)
+    }
+
     useEffect(() => {
-        fetchListing(listingId)
-    }, [listingId, signer])
+        init()
+    }, [listingId]);
 
     if (loading) {
         return <Spin size='large' />
@@ -146,7 +172,6 @@ const ListingDetail = ({ listingId, provider }) => {
 
     const cardTitle = `${name} (${handle})`
 
-
     const breadcrumbs = [
         {
             title: APP_NAME,
@@ -162,7 +187,7 @@ const ListingDetail = ({ listingId, provider }) => {
         }
     ]
 
-    const RenderContent = ({metadata}) => {
+    const RenderContent = ({ metadata }) => {
         if (!metadata) {
             return
         }
@@ -171,13 +196,53 @@ const ListingDetail = ({ listingId, provider }) => {
         }
 
         if (metadata.image) {
-            return <Image src={metadata.image} alt={metadata.name} width={64} height={64}/>
+            return <Image src={metadata.image} alt={metadata.name} width={64} height={64} />
         }
         return <span></span>
     }
 
 
     const profileImage = picture ? picture.original.url : '/profile.png'
+    const tabItems = [{
+        key: '1',
+        label: 'Reviews',
+        children: <div>
+
+            <Button
+                type="primary"
+                onClick={() => {
+                    setModalConfig({ type: 'review' })
+                }}
+            >Add review</Button>
+                {JSON.stringify(reviews)}
+        </div>,
+    },
+    {
+        key: '2',
+        label: 'Activity',
+        children: <div>
+            {/* <h1>Recent Activity</h1> */}
+            {isEmpty(publications) && <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={
+                    <span>
+                        No recent web activity found
+                    </span>
+                }
+            />}
+            {publications.map((p) => {
+                const { createdAt, metadata, appId } = p
+                if (!metadata) {
+                    return
+                }
+                return <div key={p.id}>
+                    <Comment content={<RenderContent metadata={metadata} />} datetime={formatDate(createdAt)} avatar={
+                        <Avatar src={profileImage} alt={metadata.name} />
+                    }
+                        author={`${metadata.name} (${appId})`} />
+                </div>
+            })}</div>
+    }]
 
     return (
         <div className="listing-detail-page">
@@ -222,12 +287,12 @@ const ListingDetail = ({ listingId, provider }) => {
 
                 <Row gutter={16}>
                     <Col span={24}>
-                        {address && <div>
+                        {!loading && <div>
                             <p>
-                                {(isVerified && address) ? <span className="verified-badge success-text">
+                                {(isVerified) ? <span className="verified-badge success-text">
                                     {/* <Image src="/verified.svg" width={20} height={20} alt="verified" /> */}
                                     This account is verified by {APP_NAME}&nbsp;
-                                    <Tooltip className='pointer' title="Verified accounts have been provided a secure identity credential and this page has been confirmed an official handle account by Blockreach">
+                                    <Tooltip className='pointer' title="Verified accounts have been provided a secure identity credential and this page has been confirmed an official handle account by VerifiedEntity">
                                         <InfoCircleOutlined />
                                     </Tooltip>
                                 </span> : <span></span>}
@@ -250,103 +315,50 @@ const ListingDetail = ({ listingId, provider }) => {
                             </div>}
                             <Divider />
 
-
-                            <Button size="large" type="primary" disabled={!isVerified} onClick={() => {
-                                setModalConfig({
-                                    type: 'inquiry',
-                                })
-                            }}>Send inquiry</Button>&nbsp;
-                            <Button size="large" type="primary" disabled={!isVerified} onClick={() => {
-                                setModalConfig({
-                                    type: 'payment',
-                                })
-                            }}>Submit payment</Button>
-
                             {result && <div>
                                 <Divider />
                                 <p>Result</p>
-                                {result.hash && <p>
-                                    {/* <span className='success-text'>Transaction sent!  </span> */}
-                                    <a href={getExplorerUrl(result.hash, true)} target="_blank">View transaction</a>
-                                </p>}
                                 <pre>{JSON.stringify(result, null, 2)}</pre>
                             </div>}
                         </div>}
                     </Col>
 
                 </Row>
-                {address && <Row>
+                <Row>
                     <Col span={24}>
-                        <br />
-                        <br />
-                        <h1>Recent Activity</h1>
-                        {isEmpty(publications) && <Empty
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description={
-                                <span>
-                                    No recent web activity found
-                                </span>
-                            }
-                        />}
-                        {publications.map((p) => {
-                            const { createdAt, metadata, appId } = p
-                            if (!metadata) {
-                                return
-                            }
-                            return <div key={p.id}>
-                                <Comment content={<RenderContent metadata={metadata}/>} datetime={formatDate(createdAt)} avatar={
-                                    <Avatar src={profileImage} alt={metadata.name} />
-                                }
-                                    author={`${metadata.name} (${appId})`} />
-                            </div>
-                        })}
+
+                        <Tabs
+                            defaultActiveKey="1"
+                            tabPosition='top'
+                            items={tabItems}
+                            style={{ height: 220 }} />
+
                     </Col>
-                </Row>}
+                </Row>
             </Card>
 
 
             {/* TODO: enable offer */}
             <Modal
-                title={`Send ${modalConfig.type} to ${handle}`}
+                title={ <span className='success-text'>Add a {modalConfig.type} to {handle}</span>}
                 open={!!modalConfig.type}
-                okText={`Send ${modalConfig.type}`}
+                okText={`Add ${modalConfig.type}`}
                 onOk={inquire}
                 confirmLoading={loading || inquireLoading}
                 onCancel={() => setModalConfig({})}
             >
-                <br />
-                <h4 className='success-text'>You can send messages and payments to verified accounts.</h4>
-                <br />
-                <p className='bold'>Message / Memo</p>
+                <p className='bold'>Review / Message</p>
                 <TextArea
                     rows={3}
                     placeholder={`Hey ${handle}, interested in exploring a potential collaboration. Contact me at...`}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                 />
-                <br />
-                <br />
 
-                <Checkbox
-                    checked={hideMessage}
-                    onChange={(e) => setHideMessage(e.target.checked)}
-                />
-                <span>
-                    Hide message on chain
-                </span>
-                {modalConfig.type === 'payment' && <div>
-                    <br />
-                    <p className='bold'>[Optional] Send amount with message</p>
-                    <Input
-                        type="number"
-                        placeholder={`Enter amount (${ACTIVE_CHAIN.nativeCurrency.symbol}) to send`}
-                        prefix={`Include payment (${ACTIVE_CHAIN.nativeCurrency.symbol}):`}
-                        value={amount}
-                        onError={(e) => console.log('error', e)}
-                        onChange={(e) => setAmount(e.target.value)}
-                    />
-                </div>}
-
+                <div>
+                    <Rate tooltips={desc} onChange={setRating} rating={rating} />
+                    {rating ? <span className="ant-rate-text">{desc[rating - 1]}</span> : ''}
+                </div>
             </Modal>
 
 

@@ -6,6 +6,7 @@ import { Card, Divider, List, Pagination, Spin } from 'antd'
 import { formatListing, isEmpty } from '../util'
 import { searchProfiles } from '../util/lens'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { APP_NAME } from '../constants'
 
 const gridStyle = {
@@ -49,7 +50,9 @@ export default function Home() {
   return (
     <div className='container'>
       <div className='centered'>
-        <h1>Search {APP_NAME} profiles</h1>
+
+        <Image src="logo.png" alt="VerifiedEntity Logo" width={220} height={40} /><br /><br />
+        <h1>Search profiles</h1>
         <br />
         <Search
           className='search-input'
@@ -58,17 +61,21 @@ export default function Home() {
           onSearch={value => setSearchValue(value)} enterButton />
       </div>
       {loading && <div>
+        <br/>
         <Spin size='large' />
       </div>}
       {!loading && !noResults && <div className="listing-section">
 
         <Card title={'Select result'}>
           {filteredItems.map((item, i) => {
+            const imageUrl = item?.picture?.original?.url
             return <Card.Grid className='pointer' key={i} style={gridStyle} onClick={
               () => {
                 router.push(`/profile/${item.handle}`)
               }
             }>
+              {imageUrl && <Image src={imageUrl} alt="Profile image" width={32} height={32} />}
+              <br/>
               {item.name && <span>{item.name}<br /></span>}
               <b>{item.handle}
               </b>

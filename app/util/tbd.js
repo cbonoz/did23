@@ -15,7 +15,6 @@ const getReviewSchema = (handle) => {
 // https://developer.tbd.website/api/web5-js/dwn/records#code-examples
 
 export const createMetadataForHandle = async (web5, handle, metadata) => {
-
     // Create metadata by handle from dwn
     const data = {...(metadata??{}), handle}
     const newDid = await DidKeyMethod.create('key');

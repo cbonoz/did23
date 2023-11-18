@@ -2,9 +2,8 @@
 
 import { Button, Card, Divider, Input } from "antd";
 import { useEffect, useState } from "react";
-import { APP_NAME, OFFER_TABLE, LISTING_TABLE, ACTIVE_CHAIN, BLOCKREACH_ADDRESS, GITHUB_URL } from "../constants";
+import { APP_NAME } from "../constants";
 import { postGenerateDid, postGenerateVC } from "../util/api";
-import { getExplorerUrl, isAdminAddress } from "../util";
 import { useRouter } from "next/navigation";
 import { createMetadataForHandle, getMetadataForHandle } from "../util/tbd";
 import { useDidContext } from "../context/DidProvider";
@@ -18,13 +17,6 @@ export default function Admin() {
     const [result, setResult] = useState({})
 
     const {web5} = useDidContext()
-
-    // useEffect(() => {
-    //     // push to home if not admin
-    //     if (!isAdminAddress(address)) {
-    //         router.push('/')
-    //     }
-    // }, [address])
 
     const updateResult = (key, value) => {
         setResult({ ...result, [key]: value })
@@ -85,7 +77,7 @@ export default function Admin() {
                 size='large'
                 className='standard-padding standard-margin'
                 onChange={(e) => setHandle(e.target.value)}
-                placeholder="Enter entity or individual lens handle"
+                placeholder="Enter business or individual lens handle"
                 style={{ width: 400 }} />
 
             {/* <Input
@@ -109,17 +101,17 @@ export default function Admin() {
 
         <br />
 
-        {false && <Card title='3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner'>
+        <Card title='3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner'>
             <p>
                 This will generate a verified credential for the given handle using the {APP_NAME} issuer key. This should be shared with the business/entity handle owner.
             </p>
-            <Input
+            {/* <Input
                 value={handle}
                 size='large'
                 className='standard-padding standard-margin'
                 onChange={(e) => setHandle(e.target.value)}
                 placeholder="Enter entity or individual lens handle"
-                style={{ width: 400 }} />
+                style={{ width: 400 }} /> */}
 
             {/* holder */}
             <br />
@@ -147,6 +139,6 @@ export default function Admin() {
                 <p>Result</p>
                 {JSON.stringify(result.vc, null, 2)}
             </div>}
-        </Card>}
+        </Card>
     </div>
 }

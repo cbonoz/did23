@@ -1,6 +1,3 @@
-import { IPFS_BASE_URL, ACTIVE_CHAIN, ADMIN_ADDRESS } from '../constants'
-import { ethers } from 'ethers'
-
 export function addMinutes(numOfMinutes, date = new Date()) {
   date.setMinutes(date.getMinutes() + numOfMinutes);
   return date;
@@ -15,28 +12,18 @@ export const formatDate = (d) => {
   return `${d.toLocaleDateString()} ${d.toLocaleTimeString()}`
 }
 
-export const isAdminAddress = (address) => {
-  // TODO:
-  return true;
-}
-
 export const formatCurrency = (amount, symbol) => {
   if (amount === 0) {
     return 'Free'
   } else if (!amount) {
     return ''
   }
-  return `${amount} ${symbol || ACTIVE_CHAIN.symbol}`
+  return `${amount} ${symbol}`
 }
 
-export const ipfsUrl = (cid, fileName) => {
-  // let url = `https://ipfs.io/ipfs/${cid}`;
-  let url = `${IPFS_BASE_URL}/${cid}`
-  if (fileName) {
-    return `${url}/${fileName}`;
-  }
-  return url;
-};
+export const isAdminDID = (did) => {
+  return did === process.env.NEXT_PUBLIC_ADMIN_DID
+}
 
 export const listingUrl = (listingId) => `${window.location.origin}/profile/${listingId}`;
 
@@ -56,9 +43,6 @@ export const convertCamelToHuman = (str) => {
 export function capitalize(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
-
-export const getExplorerUrl = (hash, useTx) =>
-  `${ACTIVE_CHAIN.blockExplorers.default.url}/${useTx ? "tx/" : "address/"}${hash}${ACTIVE_CHAIN.id === 31415 ? '?network=wallaby' : ''}`;
 
 export const createJsonFile = (signload, fileName) => {
   const st = JSON.stringify(signload);
@@ -101,7 +85,6 @@ export const formatListing = (listing) => {
     // shortAddress: abbreviate(listing.address),
     created_by: abbreviate(listing.created_by),
     created_at: formatDate(listing.created_at),
-    price: formatCurrency(ethers.utils.formatEther(listing.price + ""), ACTIVE_CHAIN.symbol),
     verified: listing.verified ? 'Verified' : 'Unverified',
 
   }

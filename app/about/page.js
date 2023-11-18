@@ -9,8 +9,6 @@ import { Card, Divider } from "antd";
 
 
 export default function About() {
-    const [loading, setLoading] = useState(false)
-    const [result, setResult] = useState()
 
     const router = useRouter()
     return (
@@ -19,27 +17,27 @@ export default function About() {
             <br />
 
             <p>
-                <Image src="logo.png" alt="Blockreach Logo" width={180} height={37} /><br /><br />
+                <Image src="logo.png" alt="VerifiedEntity Logo" width={200} height={40} /><br /><br />
             </p>
 
-            {/* github */}
+            <Divider/>
+
             <p>
                 {APP_NAME} is an open source project. You can find the code on GitHub here:&nbsp;
                 <a href={GITHUB_URL} target="_blank">GitHub</a>&nbsp;
             </p>
 
-            <p>Note this is a hackathon prototype and would require additional work to be mainnet ready. By uploading data you agree that this service is used as-is and that data may be compromised or shared outside the platform.</p>
-
             <p>
-                {/* Create listing */}
-                <Button type="primary" onClick={() => {
-                    router.push('/search')
-                }}>Search profiles</Button>&nbsp;
-
-
+                
             </p>
 
-            <Divider />
+            <p>
+                <Button type="primary" onClick={() => {
+                    router.push('/search')
+                }}>
+                    Search profiles
+                </Button>
+            </p>
 
 
         </div>
