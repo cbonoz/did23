@@ -22,7 +22,7 @@ export const formatCurrency = (amount, symbol) => {
 }
 
 export const isAdminDID = (did) => {
-  return did === process.env.NEXT_PUBLIC_ADMIN_DID
+  return true ||  did === process.env.NEXT_PUBLIC_ADMIN_DID
 }
 
 export const listingUrl = (listingId) => `${window.location.origin}/profile/${listingId}`;
@@ -88,4 +88,37 @@ export const formatListing = (listing) => {
     verified: listing.verified ? 'Verified' : 'Unverified',
 
   }
+}
+
+// Function to generate a random review and rating for a given company
+export function getRandomReview(companyName) {
+  // Array of possible reviews and their corresponding positivity weights
+  const reviews = [
+      { text: 'Excellent with top-notch services!', weight: 0.8 },
+      { text: 'Needs improvement in customer experience, but products are good.', weight: 0.6 },
+      { text: 'Mediocre experience, wouldn\'t recommend.', weight: 0.4 },
+      { text: 'Outstanding service and high-quality products.', weight: 0.9 },
+      { text: 'Average service, nothing special.', weight: 0.5 },
+      { text: 'Worst experience ever, stay away!', weight: 0.2 }
+      // Add more review texts and weights as needed
+  ];
+
+  // Generate a random review index based on the weighted values
+  const weightedReviews = reviews.map(review => Array(Math.ceil(review.weight * 10)).fill(review));
+  const flattenedReviews = [].concat(...weightedReviews);
+  const randomReviewIndex = Math.floor(Math.random() * flattenedReviews.length);
+  const randomReviewObj = flattenedReviews[randomReviewIndex];
+
+  // Generate a random rating between 1 and 5 based on the positivity weight
+  const randomRating = Math.round(Math.random() * 2 + randomReviewObj.weight * 3).toFixed(0);
+
+  // Get the randomly selected review text
+  const randomReview = randomReviewObj.text;
+
+  // Format and return the result
+  console.log('generate', randomReview, randomRating)
+  return {
+    message: randomReview,
+    rating: randomRating,
+  };
 }

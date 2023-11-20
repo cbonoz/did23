@@ -1,5 +1,6 @@
 // https://github.com/TBD54566975/web5-js
 
+import { isEmpty } from ".";
 import { APP_NAME } from "../constants";
 import { DidIonMethod, DidKeyMethod, DidDhtMethod } from '@web5/dids';
 
@@ -16,7 +17,7 @@ const getReviewSchema = (handle) => {
 
 export const createMetadataForHandle = async (web5, handle, metadata) => {
     // Create metadata by handle from dwn
-    const data = {...(metadata??{}), handle}
+    const data = {...(metadata??{}), handle, claimed: false}
     const newDid = await DidKeyMethod.create('key');
     console.log('createMetadataForHandle', web5, data)
     data['did'] = newDid;
@@ -24,35 +25,58 @@ export const createMetadataForHandle = async (web5, handle, metadata) => {
     const { record } = await web5.dwn.records.create({
         data,
         message: {
-            // schema: getMetadataSchema(handle),
+            schema: getMetadataSchema(handle),
             dataFormat: "application/json",
         },
     });
-    const {status} = await record.send(newDid.did);
-    return {record, status};
+    // const {status} = await record.send(newDid.did);
+    return await record.data.json()
 }
 
 export const getMetadataForHandle = async (web5, handle) => {
     // Get metadata by handle from dwn
-    const { records } = await web5.dwn.records.fetch({
-        filter: {
-            schema: getMetadataSchema(handle),
-        },
+    const { records } = await web5.dwn.records.query({
+        message: {
+            filter: {
+              schema: getMetadataSchema(handle),
+              dataFormat: 'application/json',
+            },
+          },
     });
-    return records;
+    const results = await Promise.all(
+        records.map(async (record) => record.data.json())
+      );
+
+    if (!isEmpty(results)) {
+        return {
+            handle,
+            did: results[0].did.did,
+            claimed: results[0].claimed,
+        } 
+    }
+
+    return {}
 }
 
-export const getCommentsForHandle = async (web5, recipient) => {
+export const getCommentsForHandle = async (web5, handle) => {
     // Get comments by handle from dwn
-    const { records } = await web5.dwn.records.fetch({
-        recipient,
+    const { records } = await web5.dwn.records.query({
+        message: {
+            filter: {
+              schema: getReviewSchema(handle),
+              dataFormat: 'application/json',
+            },
+          },
     });
-    return records;
+    const results = await Promise.all(
+        records.map(async (record) => record.data.json())
+      );
+    return results;
 }
 
-export const createCommentForHandle = async (web5, sender, recipient, comment) => {
+export const createCommentForHandle = async (web5, sender, recipient, comment, rating) => {
     // Create comment by handle from dwn
-    const data = {comment}
+    const data = {comment, rating}
     const { record } = await web5.dwn.records.create({
         data,
         sender,
@@ -64,8 +88,6 @@ export const createCommentForHandle = async (web5, sender, recipient, comment) =
     });
 
     // get did from handle
-    const did = await web5.did.get(handle)
-    const { status } = await record.send(did);
     return record
 }
 

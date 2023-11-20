@@ -71,7 +71,7 @@ function UiLayoutWrapper({ children }) {
                             mode="horizontal" defaultSelectedKeys={pathname} items={menuItems} />
 
                         <span style={{ float: 'right', right: 20, position: 'absolute' }}>
-                            <DidButton>Hello</DidButton>
+                            <DidButton/>
                         </span>
 
 

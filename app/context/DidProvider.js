@@ -22,7 +22,6 @@ export const DidProvider = ({ children }) => {
         try {
             if (storedDID) {
                 res = await Web5.connect({
-                    agent: null,
                     connectedDid: storedDID,
                 });
             } else {

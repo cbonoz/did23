@@ -4,7 +4,6 @@ import { Button, Card, Divider, Input } from "antd";
 import { useEffect, useState } from "react";
 import { APP_NAME } from "../constants";
 import { postGenerateDid, postGenerateVC } from "../util/api";
-import { useRouter } from "next/navigation";
 import { createMetadataForHandle, getMetadataForHandle } from "../util/tbd";
 import { useDidContext } from "../context/DidProvider";
 
@@ -13,10 +12,9 @@ export default function Admin() {
     const [error, setError] = useState()
     const [handle, setHandle] = useState()
     const [holderDid, setHolderDid] = useState()
-    const router = useRouter()
     const [result, setResult] = useState({})
 
-    const {web5} = useDidContext()
+    const { did, web5 } = useDidContext()
 
     const updateResult = (key, value) => {
         setResult({ ...result, [key]: value })
@@ -24,20 +22,30 @@ export default function Admin() {
 
     async function createDid() {
         if (!handle) {
-            throw new Error('handle is required')
+            alert('Please enter a Lens handle')
+            return
         }
-        
+
         setLoading(true)
+
+        let metadata;
+        let res = {}
         try {
-            let res = await postGenerateDid(handle);
-            res = await createMetadataForHandle(web5, handle)
-            console.log('generated', res)
-            const results = await getMetadataForHandle(web5, handle);
-            res['metadata'] = results;
-            updateResult('did', res)
+            metadata = await getMetadataForHandle(web5, handle);
+            if (metadata) {
+                console.log('Metadata already exists for this handle')
+                res['metadata'] = metadata;
+            } else {
+                res = await postGenerateDid(handle);
+                res = await createMetadataForHandle(web5, handle)
+                console.log('generated', res)
+                metadata = await getMetadataForHandle(web5, handle);
+                // res['metadata'] = res;
+            }
+            updateResult('did', metadata)
         } catch (e) {
             console.error('generating did', e)
-            // setError(e.message)
+            setError(e.message)
         } finally {
             setLoading(false)
         }
@@ -60,6 +68,12 @@ export default function Admin() {
 
     }
 
+    if (!did) {
+        return <p>
+            Connect DID with an admin account to continue
+        </p>
+    }
+
     return <div className="admin-page">
         <h1>Admin</h1>
         <br></br>
@@ -77,7 +91,7 @@ export default function Admin() {
                 size='large'
                 className='standard-padding standard-margin'
                 onChange={(e) => setHandle(e.target.value)}
-                placeholder="Enter business or individual lens handle"
+                placeholder="Enter business or individual lens handle (ex: Test.lens)"
                 style={{ width: 400 }} />
 
             {/* <Input

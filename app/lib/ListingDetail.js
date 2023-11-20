@@ -21,31 +21,27 @@ import {
 } from 'antd';
 import Image from 'next/image'
 import { APP_NAME } from '../constants';
-import { getProfileByHandle, getProfileById } from '../util/lens'
+import { getProfileByHandle } from '../util/lens'
 import VerifiedCheck from '../lib/VerifiedCheck';
-import { formatDate, isEmpty } from '../util';
-import { getCommentsForHandle, postVerifyVP } from '../util/api';
-import { Comment } from '@ant-design/compatible';
+import { isEmpty } from '../util';
+import Publications from '../lib/Publications';
+import Reviews from '../lib/Reviews';
+import { postVerifyVP } from '../util/api';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import Checkbox from 'antd/es/checkbox/Checkbox';
+import { getMetadataForHandle, getCommentsForHandle } from '../util/tbd';
+import { useDidContext } from '../context/DidProvider';
 
-const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 
 const ListingDetail = ({ listingId, provider }) => {
     const [loading, setLoading] = useState(true)
-    const [modalConfig, setModalConfig] = useState({})
-    const [inquireLoading, setInquireLoading] = useState(false)
     const [showClaimModal, setShowClaimModal] = useState(false)
     const [presentation, setPresentation] = useState()
-    const [reviews, setReviews] = useState()
     const [error, setError] = useState()
     const [profile, setProfile] = useState()
-    const [amount, setAmount] = useState()
-    const [message, setMessage] = useState()
-    const [rating, setRating] = useState(3);
-    const [hideMessage, setHideMessage] = useState(false)
     const [result, setResult] = useState()
+
+    const {did, web5} = useDidContext()
     // get account from web3
 
     const verifyPresentation = async () => {
@@ -61,7 +57,6 @@ const ListingDetail = ({ listingId, provider }) => {
                 alert('Account could not be verified: ' + err);
                 return;
             }
-            await claimProfile(null, listingId)
             setResult({
                 verified: true,
                 message: "It may take a few moments for the verification status on the page to update"
@@ -72,24 +67,6 @@ const ListingDetail = ({ listingId, provider }) => {
             console.error('error verifying', e)
             setError(e.message)
         }
-    }
-
-    async function getReviews(id) {
-        setError()
-        try {
-            const res = await getCommentsForHandle(id)
-            console.log('got reviews', res)
-            setReviews(res);
-        } catch (e) {
-            console.error('error getting reviews', e)
-            // setError(e.message)
-        }
-    }
-
-    async function postReview(id, message, rating) {
-
-
-
     }
 
     async function fetchListing(id) {
@@ -104,9 +81,9 @@ const ListingDetail = ({ listingId, provider }) => {
                 }
             }
             try {
-                // const metadata = await getProfile(signer, id)
-                // console.log('got metadata', metadata)
-                // const verified = !!metadata[2];
+                const metadata = await getMetadataForHandle(handle)
+                console.log('got metadata', metadata)
+                const verified = !!metadata[2];
                 res.verified = true;
             } catch (e) {
                 console.error('error getting metadata', e)
@@ -115,39 +92,15 @@ const ListingDetail = ({ listingId, provider }) => {
             console.log('set profile', res)
             setProfile(res);
         } catch (e) {
-            console.error('error getting listing', e)
+            console.error('error getting profile', e)
             setError(e.message)
         } finally {
             setLoading(false)
         }
     }
 
-    async function inquire() {
-        setError()
-        setInquireLoading(true)
-        const filteredMessage = hideMessage ? '(hidden)' : message
-        try {
-            const res = await sendInquiry(signer, listingId, filteredMessage, amount)
-            console.log('sent inquiry', res)
-            setResult({ hash: res.hash, status: 'Inquiry sent' })
-        } catch (e) {
-            console.error('error sending inquiry', e)
-            setError(e.message)
-        } finally {
-            setModalConfig({})
-            setInquireLoading(false)
-        }
-    }
-
-    async function init() {
-        setLoading(true)
-        await fetchListing(listingId)
-        await getReviews(listingId)
-        setLoading(false)
-    }
-
     useEffect(() => {
-        init()
+        fetchListing(listingId)
     }, [listingId]);
 
     if (loading) {
@@ -178,7 +131,7 @@ const ListingDetail = ({ listingId, provider }) => {
             href: '/'
         },
         {
-            title: 'Search Profiles',
+            title: 'Search',
             href: '/search'
         },
         {
@@ -187,61 +140,18 @@ const ListingDetail = ({ listingId, provider }) => {
         }
     ]
 
-    const RenderContent = ({ metadata }) => {
-        if (!metadata) {
-            return
-        }
-        if (metadata.content) {
-            return <span>{metadata.content}</span>
-        }
-
-        if (metadata.image) {
-            return <Image src={metadata.image} alt={metadata.name} width={64} height={64} />
-        }
-        return <span></span>
-    }
-
 
     const profileImage = picture ? picture.original.url : '/profile.png'
     const tabItems = [{
         key: '1',
         label: 'Reviews',
-        children: <div>
-
-            <Button
-                type="primary"
-                onClick={() => {
-                    setModalConfig({ type: 'review' })
-                }}
-            >Add review</Button>
-                {JSON.stringify(reviews)}
-        </div>,
+        children: <Reviews handle={handle} />,
     },
     {
         key: '2',
         label: 'Activity',
-        children: <div>
-            {/* <h1>Recent Activity</h1> */}
-            {isEmpty(publications) && <Empty
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={
-                    <span>
-                        No recent web activity found
-                    </span>
-                }
-            />}
-            {publications.map((p) => {
-                const { createdAt, metadata, appId } = p
-                if (!metadata) {
-                    return
-                }
-                return <div key={p.id}>
-                    <Comment content={<RenderContent metadata={metadata} />} datetime={formatDate(createdAt)} avatar={
-                        <Avatar src={profileImage} alt={metadata.name} />
-                    }
-                        author={`${metadata.name} (${appId})`} />
-                </div>
-            })}</div>
+        children: <Publications publications={publications} />,
+
     }]
 
     return (
@@ -262,13 +172,14 @@ const ListingDetail = ({ listingId, provider }) => {
             // }
             >
                 <Row gutter={16}>
-                    <Col span={8}>
+                    <Col span={7}>
                         <Image src={profileImage}
                             alt={`${name} profile picture`}
                             layout='fill'
                             objectFit='contain'
                         />
                     </Col>
+                    <Col span={1}></Col>
                     <Col span={16}>
                         <span>
                             <span className='handle-header bold'>{handle}</span>
@@ -303,10 +214,10 @@ const ListingDetail = ({ listingId, provider }) => {
                                     To claim this account, enter a valid Verifiable Presentation (VP) associated with this account. To get one, a {APP_NAME} admin can generate a credential for you.
                                 </p>
 
-                                {<span><Button disabled={!address} size="large" type="primary" onClick={() => {
+                                {<span><Button disabled={!did} size="large" type="primary" onClick={() => {
                                     setShowClaimModal(true)
                                 }}>Claim account</Button>&nbsp;
-                                    {!address && <span className="">Please connect your wallet to claim this account.
+                                    {!did && <span className="">Please connect your wallet to claim this account.
                                         {!isVerified && <Tooltip title="Account must be claimed and verified for others to send inquiries">
                                             <InfoCircleOutlined size={"large"} />
                                         </Tooltip>}
@@ -338,28 +249,7 @@ const ListingDetail = ({ listingId, provider }) => {
             </Card>
 
 
-            {/* TODO: enable offer */}
-            <Modal
-                title={ <span className='success-text'>Add a {modalConfig.type} to {handle}</span>}
-                open={!!modalConfig.type}
-                okText={`Add ${modalConfig.type}`}
-                onOk={inquire}
-                confirmLoading={loading || inquireLoading}
-                onCancel={() => setModalConfig({})}
-            >
-                <p className='bold'>Review / Message</p>
-                <TextArea
-                    rows={3}
-                    placeholder={`Hey ${handle}, interested in exploring a potential collaboration. Contact me at...`}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
 
-                <div>
-                    <Rate tooltips={desc} onChange={setRating} rating={rating} />
-                    {rating ? <span className="ant-rate-text">{desc[rating - 1]}</span> : ''}
-                </div>
-            </Modal>
 
 
             <Modal

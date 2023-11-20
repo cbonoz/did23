@@ -15,6 +15,10 @@ export const getProfileByHandle = async (handle) => {
         handle,
     })
 
+    if (!profile) {
+        return null;
+    }
+
     const publications = await lensClient.publication.fetchAll({
         profileId: profile.id,
         commentsOfOrdering: 'DESC',
