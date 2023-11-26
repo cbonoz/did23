@@ -15,7 +15,7 @@ Online partners and potential clients are constantly looking for ways to get in 
 
 Accounts have an additional layer of security through VerifiedEntity-issued DIDs and VCs for each verified partner on the app.
 
-VerifiedEntity serves as a bridge for secure B2B communication, ensuring that both parties can be confident they are contacting an authorized source. This assurance is achieved through VerifiedEntity-issued credentials and decentralized identifiers. 
+VerifiedEntity serves as a bridge for secure B2B communication, ensuring that both parties can be confident they are contacting an authorized source. This assurance is achieved through VerifiedEntity-issued credentials and decentralized identifiers.
 
 ## How it works
 
@@ -53,7 +53,7 @@ Any repeated starts can be done with `yarn dev` once all variables set.
 
 ## Technologies used
 
-VerifiedEntity pulls information from LENS to create a verified profile page for the business with contact information using TBD, Trinsic, and LENS. 
+VerifiedEntity pulls information from LENS to create a verified profile page for the business with contact information using TBD, Trinsic, and LENS.
 
 1. VerifiedEntity app has an admin issuer/verifier account that is run server side and used to validate new business page creations.
 2. These server verifies all new page requests and generates unique DID and VC/VP keys that are saveable by each page owner.
@@ -65,16 +65,11 @@ VerifiedEntity pulls information from LENS to create a verified profile page for
 
 ## Challenges we ran into:
 
-Verifiable Credential Issuance: It's critical that only legitimate businesses and individuals can register under a verified handle - this prompted creating a separate admin/issuer portal and due dilligence process managed with Onyx server side in order to prevent illegal claiming of profiles. The issued handle is embedded in the VC metadata and is cross checked and time of account claiming.
+Verifiable Credential Issuance: It's critical that only legitimate businesses and individuals can register under a verified handle - this prompted creating a separate admin/issuer portal and due dilligence process managed with Trinsic server side in order to prevent illegal claiming of profiles. The issued handle is embedded in the VC metadata and is cross checked and time of account claiming.
 
 User Authentication/Verification: Implementing secure user authentication processes, especially for admin functions, required a high level of attention to detail to prevent unauthorized access.
 
 Hackathon Time Constraints: As a prototype developed for a hackathon, there were time constraints that limited the depth of development and testing. This posed challenges in ensuring the platform's robustness.
-
-## Accomplishments that we're proud of:
-
-## What we learned:
-
 
 ### Screenshots
 
@@ -83,7 +78,7 @@ Hackathon Time Constraints: As a prototype developed for a hackathon, there were
 * Enhanced Security Measures: Implement advanced security features, such as multi-factor authentication and additional encryption layers, to fortify user data and interactions.
 * Integration with more identity and blockchain sources: Extend compatibility to multiple blockchains to provide users with options and flexibility when conducting verified transactions.
 * Community Governance: Establish a governance model that empowers platform users to influence decision-making and ensure long-term sustainability between parties on the app.
-* Incentives for use and reporting: Make it easy as possible to start generating leads on the application and tracking the performance of using a VerifiedEntity page vs. traditional checks/fiat payments and public aggregator sites like Yellowpages.
+* Incentives for use and reporting: Make it easy as possible to start generating leads on the application and tracking the performance of using a VerifiedEntity page vs. traditional review sites like Yelp.
 
 ### Useful links
 

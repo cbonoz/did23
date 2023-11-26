@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
-import { createVC, createVPfromVC } from "../../../util/onyx";
-import { ISSUER_DID } from "../../issuer";
+import { NextResponse } from 'next/server';
+import { ISSUER_DID } from '../../issuer';
 
 export async function POST(request) {
     // Get handle from request body
@@ -13,6 +12,6 @@ export async function POST(request) {
         { handle, vc, vp, provisioned },
         {
             status: 200,
-        },
+        }
     );
 }
