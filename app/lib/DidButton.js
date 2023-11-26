@@ -34,7 +34,7 @@ const DidButton = ({ children, useExisting }) => {
     }
 
     return (<span>
-        <Button type='primary' onClick={() => login()} loading={loading} disabled={loading}>
+        <Button type='primary' onClick={login} loading={loading} disabled={loading}>
             Signin
         </Button>&nbsp;
     </span>

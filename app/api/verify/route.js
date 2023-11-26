@@ -1,24 +1,23 @@
-import { NextResponse } from "next/server";
-import { verifyVP } from "../../util/onyx";
+import { NextResponse } from 'next/server';
+import { verifyCredential } from '../../util/trinsic';
 
 export async function POST(request) {
-
-    const {handle, presentation} = await request.json();
-    let verified
-    let error
+    // Get handle from request body
+    const { credential, handle } = await request.json();
+    let result;
     try {
-        verified = await verifyVP(presentation, handle);
+        result = await verifyCredential(credential);
     } catch (e) {
-        // log
-        console.error('error verifying', e)
-        verified = false;
-        error = e.message
+        console.error('verifying credential', e);
+        // Return nextjs server error
+        return NextResponse.json({ error: e.details || e }, { status: 500 });
     }
+    const verified = true;
 
     return NextResponse.json(
-        { handle, verified, error },
+        { handle, verified, result },
         {
             status: 200,
-        },
+        }
     );
 }
