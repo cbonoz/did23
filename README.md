@@ -78,7 +78,7 @@ Hackathon Time Constraints: As a prototype developed for a hackathon, time const
 ### Home page
 ![Alt text](home.png)
 
-#### TBD logic
+#### TBD example DWN logic for storing comments (did metadata also stored).
 ![Alt text](tbd.png)
 
 #### Adding a review
