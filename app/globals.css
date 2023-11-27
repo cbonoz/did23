@@ -56,6 +56,10 @@ a {
   padding: 5px;
 }
 
+.ant-tabs-top {
+  height: auto !important;
+}
+
 /* Old styles */
 
 .hero-image {
@@ -325,7 +329,7 @@ a:hover {
 }
 
 @media print
-{    
+{
     .no-print, .no-print *
     {
         display: none !important;

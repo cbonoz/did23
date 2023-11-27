@@ -348,7 +348,7 @@ const ListingDetail = ({ listingId, provider }) => {
                 <br />
                 <TextArea
                     rows={5}
-                    placeholder="Enter credential json"
+                    placeholder="Enter credential json exported from your Trinsic web5 account"
                     value={presentation}
                     onChange={(e) => setPresentation(e.target.value)}
                 />
