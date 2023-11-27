@@ -75,8 +75,30 @@ Hackathon Time Constraints: As a prototype developed for a hackathon, time const
 
 ### Screenshots
 
+### Home page
 ![Alt text](home.png)
-![Alt text](tbd.png) ![Alt text](review.png) ![Alt text](profile.png) ![Alt text](activity.png) ![Alt text](search.png) ![Alt text](admin.png)
+
+#### TBD logic
+![Alt text](tbd.png)
+
+#### Adding a review
+![Alt text](review.png)
+
+#### User/Company profile
+![Alt text](profile.png)
+
+#### User/company activity
+![Alt text](activity.png)
+
+#### Profile search
+![Alt text](search.png)
+
+#### Admin credential registration and sharing
+![Alt text](admin.png)
+
+
+#### Admin-invited individuals can access their credential from the trinsic portal and use in-app
+![Alt text](export.png)
 
 ## Potential future work
 
