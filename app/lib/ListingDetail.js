@@ -47,6 +47,7 @@ const ListingDetail = ({ listingId, provider }) => {
     async function fetchMeta() {
         const m = await getMetadataForHandle(web5, listingId);
         setMetadata(m);
+        return m;
     }
 
     useEffect(() => {
@@ -58,9 +59,14 @@ const ListingDetail = ({ listingId, provider }) => {
 
     const verifyPresentation = async () => {
         if (!presentation) {
+            alert('Credential is required');
             return;
         }
         try {
+            let m = metadata;
+            if (!metadata?.did) {
+                m = await fetchMeta();
+            }
             const res = await postVerifyCredential(
                 presentation,
                 profile?.handle || listingId
@@ -69,7 +75,7 @@ const ListingDetail = ({ listingId, provider }) => {
             const { record } = await web5.dwn.records.read({
                 message: {
                     filter: {
-                        recordId: metadata.id,
+                        recordId: m.id,
                     },
                 },
             });

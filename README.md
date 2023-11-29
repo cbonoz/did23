@@ -79,29 +79,29 @@ Hackathon Time Constraints: As a prototype developed for a hackathon, time const
 ### Screenshots
 
 ### Home page
-![Alt text](home.png)
+![Alt text](img/home.png)
 
-#### TBD example DWN logic for storing comments (did metadata also stored).
-![Alt text](tbd.png)
+#### TBD example DWN logic for storing comments (img/did metadata also stored).
+![Alt text](img/tbd.png)
 
 #### Adding a review
-![Alt text](review.png)
+![Alt text](img/review.png)
 
 #### User/Company profile
-![Alt text](profile.png)
+![Alt text](img/profile.png)
 
 #### User/company activity
-![Alt text](activity.png)
+![Alt text](img/activity.png)
 
 #### Profile search
-![Alt text](search.png)
+![Alt text](img/search.png)
 
 #### Admin credential registration and sharing
-![Alt text](admin.png)
+![Alt text](img/admin.png)
 
 
 #### Admin-invited individuals can access their credential from the trinsic portal and use in-app
-![Alt text](export.png)
+![Alt text](img/export.png)
 
 ## Potential future work
 
