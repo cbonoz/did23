@@ -85,7 +85,7 @@ export default function Admin() {
 
             <Divider />
 
-            <Card title="2. Generate DID (issuer and holder) keys">
+            <Card title="Generate DID (issuer and holder) keys">
                 <p>
                     This will generate a new DID associated with the handle
                     below.
@@ -107,7 +107,7 @@ export default function Admin() {
                     size="large"
                     className="standard-padding standard-margin"
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter entity email address"
+                    placeholder="Enter entity or contact email address"
                     style={{ width: 400 }}
                 />
 
@@ -140,13 +140,14 @@ export default function Admin() {
 
             <br />
 
-            <Card title="3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner">
-                <p>
-                    This will generate a verified credential for the given
-                    handle using the {APP_NAME} issuer key. This should be
-                    shared with the business/entity handle owner.
-                </p>
-                {/* <Input
+            {false && (
+                <Card title="3. Generate Verified Credentials (VC) and signed presentation (VP) for a new handle owner">
+                    <p>
+                        This will generate a verified credential for the given
+                        handle using the {APP_NAME} issuer key. This should be
+                        shared with the business/entity handle owner.
+                    </p>
+                    {/* <Input
                 value={handle}
                 size='large'
                 className='standard-padding standard-margin'
@@ -154,43 +155,44 @@ export default function Admin() {
                 placeholder="Enter entity or individual lens handle"
                 style={{ width: 400 }} /> */}
 
-                {/* holder */}
-                <br />
-                <Input
-                    value={holderDid}
-                    size="large"
-                    className="standard-padding standard-margin"
-                    onChange={(e) => setHolderDid(e.target.value)}
-                    placeholder="Enter holder DID"
-                    style={{ width: 400 }}
-                />
+                    {/* holder */}
+                    <br />
+                    <Input
+                        value={holderDid}
+                        size="large"
+                        className="standard-padding standard-margin"
+                        onChange={(e) => setHolderDid(e.target.value)}
+                        placeholder="Enter holder DID"
+                        style={{ width: 400 }}
+                    />
 
-                <br />
-                <br />
-                <Button
-                    type="primary"
-                    disabled={loading || !handle || !holderDid}
-                    loading={loading}
-                    onClick={generate}
-                >
-                    Generate
-                </Button>
-
-                {result.vc && (
-                    <div
-                        style={{
-                            whiteSpace: 'pre-wrap',
-                            wordWrap: 'break-word',
-                        }}
+                    <br />
+                    <br />
+                    <Button
+                        type="primary"
+                        disabled={loading || !handle || !holderDid}
+                        loading={loading}
+                        onClick={generate}
                     >
-                        <Divider />
-                        <span>Copy and share the below VC and VP.</span>
-                        <br />
-                        <p>Result</p>
-                        {JSON.stringify(result.vc, null, 2)}
-                    </div>
-                )}
-            </Card>
+                        Generate
+                    </Button>
+
+                    {result.vc && (
+                        <div
+                            style={{
+                                whiteSpace: 'pre-wrap',
+                                wordWrap: 'break-word',
+                            }}
+                        >
+                            <Divider />
+                            <span>Copy and share the below VC and VP.</span>
+                            <br />
+                            <p>Result</p>
+                            {JSON.stringify(result.vc, null, 2)}
+                        </div>
+                    )}
+                </Card>
+            )}
         </div>
     );
 }

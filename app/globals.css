@@ -82,6 +82,11 @@ a {
   background: #eee;
 }
 
+a {
+  /* primary */
+  color: #674ea7;
+}
+
 .boxed {
   padding: 20px;
   border-radius: 5px;

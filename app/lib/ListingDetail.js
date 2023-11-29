@@ -181,7 +181,7 @@ const ListingDetail = ({ listingId, provider }) => {
         {
             key: '1',
             label: 'Reviews',
-            children: <Reviews handle={handle} />,
+            children: <Reviews handle={handle} isVerified={isVerified} />,
         },
         {
             key: '2',

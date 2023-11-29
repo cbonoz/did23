@@ -22,7 +22,7 @@ import { Comment } from '@ant-design/compatible';
 const desc = ['terrible', 'bad', 'normal', 'good', 'wonderful'];
 const generatedPlaceholder = getRandomReview().message;
 
-const Reviews = ({ handle }) => {
+const Reviews = ({ handle, isVerified }) => {
     const [modalConfig, setModalConfig] = useState({});
     const [reviews, setReviews] = useState([]);
     const [message, setMessage] = useState('');
@@ -101,12 +101,19 @@ const Reviews = ({ handle }) => {
         <div>
             <Button
                 type="primary"
+                disabled={!isVerified}
                 onClick={() => {
                     setModalConfig({ type: 'review' });
                 }}
             >
                 Add review
             </Button>
+
+            {!isVerified && (
+                <p className="error-text">
+                    Reviews are only available for verified handles.
+                </p>
+            )}
 
             {isEmpty(reviews) && !loading && (
                 <Empty description="No reviews yet" />
