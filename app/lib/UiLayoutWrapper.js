@@ -15,7 +15,6 @@ function UiLayoutWrapper({ children }) {
     const { did } = useDidContext();
 
     const pathname = usePathname();
-    const isListingPage = pathname.startsWith('/profile');
     const menuItems = [];
     menuItems.push({
         key: '/search',

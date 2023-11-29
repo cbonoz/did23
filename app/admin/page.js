@@ -6,6 +6,7 @@ import { APP_NAME } from '../constants';
 import { postGenerateDid, postGenerateVC } from '../util/api';
 import { createMetadataForHandle, getMetadataForHandle } from '../util/tbd';
 import { useDidContext } from '../context/DidProvider';
+import { listingUrl } from '../util';
 
 export default function Admin() {
     const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ export default function Admin() {
                 res = await createMetadataForHandle(web5, handle);
                 console.log('generated', res);
                 metadata = await getMetadataForHandle(web5, handle);
+                metadata['profilePage'] = listingUrl(handle);
                 // res['metadata'] = res;
             }
             updateResult('did', metadata);
@@ -87,8 +89,9 @@ export default function Admin() {
 
             <Card title="Generate DID (issuer and holder) keys">
                 <p>
-                    This will generate a new DID associated with the handle
-                    below.
+                    This will generate a new DID and verifiable credential
+                    associated with the handle below. The email address will be
+                    able to use their credential to verify their profile page.
                 </p>
 
                 <Input

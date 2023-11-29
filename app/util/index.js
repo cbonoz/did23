@@ -22,7 +22,7 @@ export const formatCurrency = (amount, symbol) => {
 };
 
 export const isAdminDID = (did) => {
-    return true || did === process.env.NEXT_PUBLIC_ADMIN_DID;
+    return did === process.env.NEXT_PUBLIC_ADMIN_DID;
 };
 
 export const listingUrl = (listingId) =>
