@@ -111,6 +111,7 @@ const Reviews = ({ handle, isVerified }) => {
 
             {!isVerified && (
                 <p className="error-text">
+                    <br />
                     Reviews are only available for verified handles.
                 </p>
             )}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Tooltip } from 'antd';
 import { abbreviate } from '../util';
 import { useDidContext } from '../context/DidProvider';
 
@@ -24,12 +24,16 @@ const DidButton = ({ children, useExisting }) => {
         const copyDid = (e) => {
             e.preventDefault();
             navigator.clipboard.writeText(did);
-            alert('Copied DID to clipboard');
+            // alternative if clipboard not defined
         };
 
         return (
             <span>
-                <a onClick={copyDid}>{abbreviate(did, 12)}</a>
+                <a onClick={copyDid}>
+                    <Tooltip title={'Copy to clipboard'}>
+                        {abbreviate(did, 12)}
+                    </Tooltip>
+                </a>
                 &nbsp;
                 <Button
                     type="primary"

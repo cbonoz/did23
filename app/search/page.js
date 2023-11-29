@@ -21,7 +21,7 @@ export default function Home() {
     const [data, setData] = useState([]);
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const filteredItems = data; // isEmpty(searchValue) ? data : filteredData;
+    const filteredItems = data?.slice(pageSize * (page - 1), pageSize * page); // isEmpty(searchValue) ? data : filteredData;
 
     async function search() {
         if (isEmpty(searchValue)) {
@@ -85,7 +85,7 @@ export default function Home() {
             <br />
             {!loading && !noResults && (
                 <div className="listing-section">
-                    <Card title={'Select result'}>
+                    <Card title={'Select profile'}>
                         {filteredItems.map((item, i) => {
                             const imageUrl = item?.picture?.original?.url;
                             return (
@@ -126,15 +126,13 @@ export default function Home() {
                 )}
                 {filteredItems.length > 0 && (
                     <div>
-                        <p className="bold">
-                            Found listings: {filteredItems.length}
-                        </p>
+                        <p className="bold">Found listings: {data.length}</p>
                     </div>
                 )}
                 <br />
                 <Pagination
                     current={page}
-                    total={filteredItems.length}
+                    total={data.length}
                     pageSize={pageSize}
                     onChange={(page) => setPage(page)}
                 />
