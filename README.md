@@ -9,6 +9,8 @@ VerifiedEntity
 
 Verified company reviews using verified Web5 DID secure channels and decentralized web nodes.
 
+Built for the <a target="_blank" href="https://difhackathon.devpost.com/">DIF Hackathon 2023</a>.
+
 ### Inspiration
 
 Online partners and potential clients are constantly looking for ways to get in contact with a business or make themselves known. VerifiedEntity addresses this need by enabling companies to create their own verified social review pages, facilitating interactions, and managing public reviews through VerifiedEntity-decentralized nodes. Furthermore, VerifiedEntity enhances security by assigning Decentralized Identifiers (DIDs) and VCs to verified partners.
