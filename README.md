@@ -19,13 +19,13 @@ VerifiedEntity serves as a bridge for secure B2B communication, ensuring that bo
 
 ## How it works
 
-VerifiedEntity has an issuer that validates and provisions DID's on behalf of businesses.
+VerifiedEntity has an issuer Trinsic account that validates and provisions DID's on behalf of businesses. Data for reviews and profiles are stored on DWN's instead of centralized databases.
 
-1. Pages on VerifiedEntity are automatically generated from user or company's existing web profile using <a href="https://www.lens.xyz/" target="_blank">Lens</a>.
-2. Users can claim profiles using validated DIDs provisioned from a VerifiedEntity admin specified by Trinsic. Profiles are validated via verified credential exchange with the Trinsic sdk.
-3. The validation state is saved on DWN nodes via the TBD sdk.
+1. Pages on VerifiedEntity are automatically generated from user or company's existing web profile using <a href="https://www.lens.xyz/" target="_blank">Lens Protocol</a> without needing additional setup.
+2. Users can claim profiles using validated credentials provisioned from a VerifiedEntity admin specified by their did. Profiles are validated via verified credential exchange with the Trinsic sdk.
+3. The validation state is saved on DWNs (decentralized web nodes) via the TBD sdk.
 4. Once verified, verified pages can be shared and reviewed by public website users.
-5. Reviews are saved using DWN nodes via TBD sdk.
+5. Reviews are also saved using DWNs via the TBD sdk.
 6. The social activity of the profile is also integrated into the app.
 
 
