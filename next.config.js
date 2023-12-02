@@ -4,6 +4,9 @@ const nextConfig = {
     images: {
         unoptimized: true,
     },
+    experimental: {
+        serverComponentsExternalPackages: ['@trinsic/trinsic'],
+    },
     eslint: {
         // ignore eslint during build process
         ignoreDuringBuilds: true,
